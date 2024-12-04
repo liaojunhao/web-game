@@ -76,4 +76,14 @@ export class TerisRule {
   static moveDirectly(teris: SquareGroup, direction: MoveDirection) {
     while (this.move(teris, direction)) {}
   }
+
+  static rotate(teris: SquareGroup): boolean {
+    const newShape = teris.afterRotateShape(); //得到旋转之后新的形状
+    if (this.canIMove(newShape, teris.centerPoint)) {
+      teris.rotate();
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

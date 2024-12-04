@@ -26,6 +26,7 @@ export class SquareGroup {
       arr.push(sq);
     });
     this._squares = arr;
+    this.setSquarePoints();
   }
   // 根据中心的计算后每一个方块
   public get squares() {
@@ -43,7 +44,54 @@ export class SquareGroup {
 
   public set centerPoint(v: Point) {
     this._centerPoint = v;
+    this.setSquarePoints();
     //同时设置所有小方块对象的坐标
+    // this._shape.forEach((p, i) => {
+    //   this._squares[i].point = {
+    //     x: this._centerPoint.x + p.x,
+    //     y: this._centerPoint.y + p.y
+    //   };
+    // });
+  }
+
+  /**
+   * 旋转方向是否为顺时针
+   */
+  protected isClock = true;
+
+  /**
+   * 旋转之后的坐标
+   */
+  afterRotateShape() {
+    if (this.isClock) {
+      return this._shape.map((p) => {
+        const newP: Point = {
+          x: -p.y,
+          y: p.x
+        };
+        return newP;
+      });
+    } else {
+      return this._shape.map((p) => {
+        const newP: Point = {
+          x: p.y,
+          y: -p.x
+        };
+        return newP;
+      });
+    }
+  }
+
+  rotate() {
+    const newShape = this.afterRotateShape();
+    this._shape = newShape;
+    this.setSquarePoints();
+  }
+
+  /**
+   * 根据中心点坐标，以及形状，设置每一个小方块的坐标
+   */
+  private setSquarePoints() {
     this._shape.forEach((p, i) => {
       this._squares[i].point = {
         x: this._centerPoint.x + p.x,

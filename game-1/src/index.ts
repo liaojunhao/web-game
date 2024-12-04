@@ -17,3 +17,25 @@ $('#btnDown').click(function () {
   //更改中心点坐标
   TerisRule.moveDirectly(teris, MoveDirection.down);
 });
+
+$('#btnUp').click(function () {
+  //更改中心点坐标
+  TerisRule.move(teris, {
+    x: teris.centerPoint.x,
+    y: teris.centerPoint.y - 1
+  });
+});
+
+$('#btnLeft').click(function () {
+  //更改中心点坐标
+  TerisRule.moveDirectly(teris, MoveDirection.left);
+});
+
+$('#btnRight').click(function () {
+  //更改中心点坐标
+  TerisRule.moveDirectly(teris, MoveDirection.right);
+});
+
+$('#rotate').click(function () {
+  TerisRule.rotate(teris);
+});
