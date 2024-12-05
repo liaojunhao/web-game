@@ -4,13 +4,12 @@ import { Shape, Point } from './types';
  * 组合方块
  */
 export class SquareGroup {
-  // 每个具体的方块
-  private _squares: readonly Square[];
+  private _squares: readonly Square[]; // 根据形状构建出来的每个小方块
 
   /**
    *
-   * @param _shape 他的形状
-   * @param _centerPoint
+   * @param _shape 他的形状基本参数
+   * @param _centerPoint 中心点坐标
    * @param _color
    */
   constructor(private _shape: Shape, private _centerPoint: Point, private _color: string) {
@@ -83,8 +82,11 @@ export class SquareGroup {
   }
 
   rotate() {
+    // 先得到旋转后的方块
     const newShape = this.afterRotateShape();
+    // 进行替换
     this._shape = newShape;
+    // 真正去修改每个坐标
     this.setSquarePoints();
   }
 
@@ -93,6 +95,7 @@ export class SquareGroup {
    */
   private setSquarePoints() {
     this._shape.forEach((p, i) => {
+      console.log('p --->', p, this._centerPoint);
       this._squares[i].point = {
         x: this._centerPoint.x + p.x,
         y: this._centerPoint.y + p.y

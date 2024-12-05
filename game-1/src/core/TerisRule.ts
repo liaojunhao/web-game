@@ -78,8 +78,10 @@ export class TerisRule {
   }
 
   static rotate(teris: SquareGroup): boolean {
-    const newShape = teris.afterRotateShape(); //得到旋转之后新的形状
+    const newShape = teris.afterRotateShape(); //先得到旋转之后新的形状
+    // 在判断有没有超出游戏场景
     if (this.canIMove(newShape, teris.centerPoint)) {
+      // 没有的话在去真正的旋转
       teris.rotate();
       return true;
     } else {

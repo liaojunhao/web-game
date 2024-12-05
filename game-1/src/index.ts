@@ -1,41 +1,8 @@
-import { Square } from './core/Square';
-import { SquareGroup } from './core/SquareGroup';
-import { createTeris } from './core/Teris';
-import { TerisRule } from './core/TerisRule';
-import { MoveDirection } from './core/types';
-import { SquarePageViewer } from './core/viewer/SquarePageViewer';
+import { Game } from './core/Game';
+import { GamePageViewer } from './core/viewer/GamePageViewer';
 import $ from 'jquery';
+var g = new Game(new GamePageViewer());
 
-const teris = createTeris({ x: 3, y: 2 });
-console.log('teris', teris);
-
-teris.squares.forEach((sq) => {
-  sq.viewer = new SquarePageViewer(sq, $('#root'));
-});
-
-$('#btnDown').click(function () {
-  //更改中心点坐标
-  TerisRule.moveDirectly(teris, MoveDirection.down);
-});
-
-$('#btnUp').click(function () {
-  //更改中心点坐标
-  TerisRule.move(teris, {
-    x: teris.centerPoint.x,
-    y: teris.centerPoint.y - 1
-  });
-});
-
-$('#btnLeft').click(function () {
-  //更改中心点坐标
-  TerisRule.moveDirectly(teris, MoveDirection.left);
-});
-
-$('#btnRight').click(function () {
-  //更改中心点坐标
-  TerisRule.moveDirectly(teris, MoveDirection.right);
-});
-
-$('#rotate').click(function () {
-  TerisRule.rotate(teris);
+$('#btnStart').click(function () {
+  g.start();
 });
