@@ -99,6 +99,9 @@ export class Game {
   private switchTeris() {
     this._curTeris = this._nextTeris;
     this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris); // 当前的加到游戏面板中
+
+    //有可能出问题：当前方块一出现时，就已经和之前的方块重叠了
+
     this._nextTeris = createTeris({ x: 0, y: 0 });
     this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris); // 下一个方块加到下一个提示面板中
     // 显示者
@@ -132,6 +135,10 @@ export class Game {
   private hitBottom() {
     //将当前的俄罗斯方块包含的小方块，加入到已存在的方块数组中。
     this._exists = this._exists.concat(this._curTeris!.squares);
+
+    //处理移除
+    const num = TerisRule.deleteSquares(this._exists);
+
     //切换方块
     this.switchTeris();
   }
