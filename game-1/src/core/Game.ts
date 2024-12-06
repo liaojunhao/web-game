@@ -1,3 +1,5 @@
+import GameConfig from './GameConfig';
+import { Square } from './Square';
 import { SquareGroup } from './SquareGroup';
 import { createTeris } from './Teris';
 import { TerisRule } from './TerisRule';
@@ -6,20 +8,19 @@ import { GameStatus, GameViewer, MoveDirection } from './types';
 export class Game {
   //游戏状态
   private _gameStatus: GameStatus = GameStatus.init;
-
   //当前玩家操作的方块
   private _curTeris?: SquareGroup;
-
   //下一个方块
   private _nextTeris: SquareGroup = createTeris({ x: 0, y: 0 });
-
   //计时器
   private _timer?: number;
-
   //自动下落的间隔时间
   private _duration: number = 1000;
+  //当前游戏中，已存在的小方块
+  private _exists: Square[] = [];
 
   constructor(private _viewer: GameViewer) {
+    this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris);
     this._viewer.showNext(this._nextTeris);
   }
 
@@ -39,6 +40,43 @@ export class Game {
   }
 
   /**
+   * 游戏暂停
+   */
+  pause() {
+    if (this._gameStatus === GameStatus.playing) {
+      this._gameStatus = GameStatus.pause;
+      clearInterval(this._timer);
+      this._timer = undefined;
+    }
+  }
+
+  controlLeft() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRule.move(this._curTeris, MoveDirection.left, this._exists);
+    }
+  }
+
+  controlRight() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRule.move(this._curTeris, MoveDirection.right, this._exists);
+    }
+  }
+
+  controlDown() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRule.moveDirectly(this._curTeris, MoveDirection.down, this._exists);
+      // 触底
+      this.hitBottom();
+    }
+  }
+
+  controlRotate() {
+    if (this._curTeris && this._gameStatus === GameStatus.playing) {
+      TerisRule.rotate(this._curTeris, this._exists);
+    }
+  }
+
+  /**
    * 当前方块自由下落
    */
   private autoDrop() {
@@ -47,7 +85,10 @@ export class Game {
     }
     this._timer = setInterval(() => {
       if (this._curTeris) {
-        TerisRule.move(this._curTeris, MoveDirection.down);
+        if (!TerisRule.move(this._curTeris, MoveDirection.down, this._exists)) {
+          //触底
+          this.hitBottom();
+        }
       }
     }, this._duration);
   }
@@ -57,7 +98,12 @@ export class Game {
    */
   private switchTeris() {
     this._curTeris = this._nextTeris;
+    this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris); // 当前的加到游戏面板中
     this._nextTeris = createTeris({ x: 0, y: 0 });
+    this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris); // 下一个方块加到下一个提示面板中
+    // 显示者
+    this._viewer.swtich(this._curTeris);
+    this._viewer.showNext(this._nextTeris);
   }
 
   /**
@@ -78,5 +124,15 @@ export class Game {
           })
       );
     }
+  }
+
+  /**
+   * 触底之后的操作
+   */
+  private hitBottom() {
+    //将当前的俄罗斯方块包含的小方块，加入到已存在的方块数组中。
+    this._exists = this._exists.concat(this._curTeris!.squares);
+    //切换方块
+    this.switchTeris();
   }
 }

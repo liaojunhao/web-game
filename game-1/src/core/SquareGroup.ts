@@ -95,7 +95,6 @@ export class SquareGroup {
    */
   private setSquarePoints() {
     this._shape.forEach((p, i) => {
-      console.log('p --->', p, this._centerPoint);
       this._squares[i].point = {
         x: this._centerPoint.x + p.x,
         y: this._centerPoint.y + p.y
