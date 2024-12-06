@@ -18,10 +18,29 @@ export class Game {
   private _duration: number = 1000;
   //当前游戏中，已存在的小方块
   private _exists: Square[] = [];
+  //积分
+  private _score: number = 0;
 
   constructor(private _viewer: GameViewer) {
+    this.createNext();
+  }
+
+  private createNext() {
+    this._nextTeris = createTeris({ x: 0, y: 0 });
     this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris);
     this._viewer.showNext(this._nextTeris);
+  }
+
+  private init() {
+    this._exists.forEach((sq) => {
+      if (sq.viewer) {
+        sq.viewer.remove();
+      }
+    });
+    this._exists = [];
+    this.createNext();
+    this._curTeris = undefined;
+    this._score = 0;
   }
 
   /**
@@ -31,6 +50,11 @@ export class Game {
     //游戏状态的改变
     if (this._gameStatus === GameStatus.playing) {
       return;
+    }
+    //从游戏结束到开始
+    if (this._gameStatus === GameStatus.over) {
+      //初始化操作
+      this.init();
     }
     this._gameStatus = GameStatus.playing;
     if (!this._curTeris) {
@@ -98,15 +122,22 @@ export class Game {
    */
   private switchTeris() {
     this._curTeris = this._nextTeris;
-    this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris); // 当前的加到游戏面板中
-
+    this._curTeris.squares.forEach((sq) => {
+      if (sq.viewer) {
+        sq.viewer.remove();
+      }
+    });
+    this.resetCenterPoint(GameConfig.panelSize.width, this._curTeris); // 当前的加到游戏面板中间
     //有可能出问题：当前方块一出现时，就已经和之前的方块重叠了
-
-    this._nextTeris = createTeris({ x: 0, y: 0 });
-    this.resetCenterPoint(GameConfig.nextSize.width, this._nextTeris); // 下一个方块加到下一个提示面板中
-    // 显示者
+    if (!TerisRule.canIMove(this._curTeris.shape, this._curTeris.centerPoint, this._exists)) {
+      //游戏结束
+      this._gameStatus = GameStatus.over;
+      clearInterval(this._timer);
+      this._timer = undefined;
+      return;
+    }
+    this.createNext();
     this._viewer.swtich(this._curTeris);
-    this._viewer.showNext(this._nextTeris);
   }
 
   /**
@@ -119,13 +150,10 @@ export class Game {
     const y = 0;
     teris.centerPoint = { x, y };
     while (teris.squares.some((it) => it.point.y < 0)) {
-      teris.squares.forEach(
-        (sq) =>
-          (sq.point = {
-            x: sq.point.x,
-            y: sq.point.y + 1
-          })
-      );
+      teris.centerPoint = {
+        x: teris.centerPoint.x,
+        y: teris.centerPoint.y + 1
+      };
     }
   }
 
@@ -139,7 +167,29 @@ export class Game {
     //处理移除
     const num = TerisRule.deleteSquares(this._exists);
 
+    //增加积分
+    this.addScore(num);
+
     //切换方块
     this.switchTeris();
+  }
+
+  /**
+   * 增加积分
+   * @param lineNum
+   * @returns
+   */
+  private addScore(lineNum: number) {
+    if (lineNum === 0) {
+      return;
+    } else if (lineNum === 1) {
+      this._score += 10;
+    } else if (lineNum === 2) {
+      this._score += 25;
+    } else if (lineNum === 3) {
+      this._score += 50;
+    } else {
+      this._score += 100;
+    }
   }
 }

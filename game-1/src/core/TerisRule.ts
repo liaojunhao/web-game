@@ -125,9 +125,7 @@ export class TerisRule {
    * @param y
    */
   private static deleteLine(exists: Square[], y: number): boolean {
-    // 获取出这一行y都相同的盒子
     const squares = exists.filter((sq) => sq.point.y === y);
-    // 在判断满不满一行
     if (squares.length === GameConfig.panelSize.width) {
       //这一行可以消除
       squares.forEach((sq) => {
@@ -135,20 +133,19 @@ export class TerisRule {
         if (sq.viewer) {
           sq.viewer.remove();
         }
-        //2. 剩下的，y坐标比当前的y小的方块，y+1
-        exists
-          .filter((sq) => sq.point.y < y)
-          .forEach((sq) => {
-            sq.point = {
-              x: sq.point.x,
-              y: sq.point.y + 1
-            };
-          });
-
-        // 3.还要记得删除数据里面的方块
+        //2. 从数组中移除
         const index = exists.indexOf(sq);
         exists.splice(index, 1);
       });
+      //2. 剩下的，y坐标比当前的y小的方块，y+1
+      exists
+        .filter((sq) => sq.point.y < y)
+        .forEach((sq) => {
+          sq.point = {
+            x: sq.point.x,
+            y: sq.point.y + 1
+          };
+        });
 
       return true;
     }
