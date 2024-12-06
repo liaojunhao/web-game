@@ -6,6 +6,10 @@ import { TerisRule } from './TerisRule';
 import { GameStatus, GameViewer, MoveDirection } from './types';
 
 export class Game {
+  public get gameStatus() {
+    return this._gameStatus;
+  }
+
   //游戏状态
   private _gameStatus: GameStatus = GameStatus.init;
   //当前玩家操作的方块
@@ -20,9 +24,30 @@ export class Game {
   private _exists: Square[] = [];
   //积分
   private _score: number = 0;
+  // 获取积分
+  public get score() {
+    return this._score;
+  }
+  public set score(val) {
+    this._score = val; // 设计积分
+    this._viewer.showScore(val); //显示积分
+    const level = GameConfig.levels.filter((it) => it.score <= val).pop()!; // 判断多少分了提高一下难度
+    if (level.duration === this._duration) {
+      return;
+    }
+    this._duration = level.duration;
+    if (this._timer) {
+      clearInterval(this._timer); // 清楚上一个定时器，改为新的时间难度
+      this._timer = undefined;
+      this.autoDrop(); // 继续下坠
+    }
+  }
 
   constructor(private _viewer: GameViewer) {
+    this._duration = GameConfig.levels[0].duration;
     this.createNext();
+    this._viewer.init(this);
+    this._viewer.showScore(this.score);
   }
 
   private createNext() {
@@ -58,9 +83,11 @@ export class Game {
     }
     this._gameStatus = GameStatus.playing;
     if (!this._curTeris) {
+      //给当前玩家操作的方块赋值
       this.switchTeris();
     }
     this.autoDrop();
+    this._viewer.onGameStart();
   }
 
   /**
@@ -71,6 +98,7 @@ export class Game {
       this._gameStatus = GameStatus.pause;
       clearInterval(this._timer);
       this._timer = undefined;
+      this._viewer.onGamePause();
     }
   }
 
@@ -134,6 +162,7 @@ export class Game {
       this._gameStatus = GameStatus.over;
       clearInterval(this._timer);
       this._timer = undefined;
+      this._viewer.onGameOver();
       return;
     }
     this.createNext();

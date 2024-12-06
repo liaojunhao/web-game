@@ -1,3 +1,4 @@
+import { Game } from './Game';
 import { SquareGroup } from './SquareGroup';
 
 export interface Point {
@@ -46,4 +47,17 @@ export interface GameViewer {
    * @param teris 切换的方块对象
    */
   swtich(teris: SquareGroup): void;
+
+  /**
+   * 完成界面的初始化
+   */
+  init(game: Game): void;
+
+  showScore(score: number): void;
+
+  onGamePause(): void;
+
+  onGameStart(): void;
+
+  onGameOver(): void;
 }
