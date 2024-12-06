@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/index.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <title>像素鸟</title>
+    <style></style>
+  </head>
+  <body>
+    <!-- 这里画布大小要写在标签内，用CSS去设置标签的大小只能改变元素本身的尺寸不能改变真实绘画区域，不设置宽高的canvas元素默认宽高是300*150 -->
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="js/Progress.js"></script>
+    <script type="text/javascript" src="js/Game.js"></script>
+    <script type="text/javascript" src="js/Background.js"></script>
+    <script type="text/javascript" src="js/Land.js"></script>
+    <script type="text/javascript">
+      let game = new Game();
+    </script>
+  </body>
+</html>
