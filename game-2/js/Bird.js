@@ -4,7 +4,7 @@
     this.y = 100;
     this.changeY = 0;
     this.rotate = 0;
-    this.img = [game.Img['bird0_0'], game.Img['bird0_1'], game.Img['bird0_2']];
+    this.img = [game.allImg['bird0_0'], game.allImg['bird0_1'], game.allImg['bird0_2']];
     this.status = 'drop';
     this.wing = 0;
   };

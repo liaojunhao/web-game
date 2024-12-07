@@ -19,10 +19,10 @@
      *
      * */
 
-    game.draw.drawImage(game.Img['bg_day'], this.x, game.canvas.height - this.height);
-    game.draw.drawImage(game.Img['bg_day'], this.x + this.width, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['bg_day'], this.x, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['bg_day'], this.x + this.width, game.canvas.height - this.height);
     // 为了实现无缝衔接加多一个背景图
-    game.draw.drawImage(game.Img['bg_day'], this.x + this.width * 2, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['bg_day'], this.x + this.width * 2, game.canvas.height - this.height);
     game.draw.fillStyle = '#4ec0ca';
     game.draw.fillRect(0, 0, game.canvas.width, game.canvas.height - this.height);
   };

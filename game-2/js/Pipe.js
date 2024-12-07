@@ -12,9 +12,9 @@
     game.pipeArr.push(this);
   });
   Pipe.prototype.render = function () {
-    game.draw.drawImage(game.Img['pipe_down'], 0, 320 - this.h1, 52, this.h1, this.x, 0, 52, this.h1);
+    game.draw.drawImage(game.allImg['pipe_down'], 0, 320 - this.h1, 52, this.h1, this.x, 0, 52, this.h1);
     game.draw.drawImage(
-      game.Img['pipe_up'],
+      game.allImg['pipe_up'],
       0,
       0,
       52,

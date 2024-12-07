@@ -1,15 +1,59 @@
 (function () {
   let Game = (window.Game = function () {
     this.canvas = document.getElementById('canvas');
-    /* draw当前2d绘画环境 */
     this.draw = this.canvas.getContext('2d');
     let W = document.documentElement.clientWidth,
       H = document.documentElement.clientHeight;
     this.canvas.width = W > 420 ? 420 : W;
     this.canvas.height = H > 750 ? 750 : H;
+    this.scene = 0; // 初始化场景的编号
+    this.loadImg();
+    // this.bindEvent();
+  });
 
+  /* 清屏方法 */
+  Game.prototype.clear = function () {
+    this.draw.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  };
+
+  /* 启动游戏 */
+  Game.prototype.start = function () {
+    // this.draw.fillStyle = '#333';
+    // this.draw.textAlign = 'left';
+    // this.bg = new Background();
+    // this.land = new Land();
+    // this.bird = new Bird();
+    // this.bg.update();
+    // this.bg.render();
+    // this.pipeArr = [];
+    this.f = 0;
+    this.sM = new SceneManage();
+    // 默认进入的场景
+    this.sM.enter(0);
+    this.timer = setInterval(() => {
+      this.f++;
+      this.clear();
+      this.sM.updateAndRender();
+      // this.bg.update();
+      // this.bg.render();
+      // this.land.update();
+      // this.land.render();
+      // // 渲染管子
+      // this.pipeArr.forEach((element) => {
+      //   element.update();
+      //   element.render();
+      // });
+      // // 每200帧渲染一个管子
+      // this.frame % 200 === 0 && new Pipe();
+      // this.bird.update();
+      // this.bird.render();
+    }, 20);
+  };
+
+  /* 加载图片 */
+  Game.prototype.loadImg = function () {
     /* 预加载图片管理 */
-    this.Img = {
+    this.allImg = {
       bg_day: '/game-2/img/bg_day.png',
       land: '/game-2/img/land.png',
       pipe_down: '/game-2/img/pipe_down.png',
@@ -49,63 +93,26 @@
     /* 计算图片的加载个数 */
     let count = 0;
     /* 获取图片的长度（这个不是数组是对象，对象获取长度的方法Object.keys().length） */
-    let picAmount = Object.keys(this.Img).length;
+    let picAmount = Object.keys(this.allImg).length;
 
     /* 创建进度条 */
-    let progress = new Progress(this.draw, W / 2 - 150, H / 3, 0, 30);
+    // let progress = new Progress(this.draw, W / 2 - 150, H / 3, 0, 30);
     /* 遍历对象中所有图片 */
-    for (let K in this.Img) {
+    for (let K in this.allImg) {
       ((src) => {
-        this.Img[K] = new Image();
-        this.Img[K].src = src;
-        this.Img[K].onload = () => {
+        this.allImg[K] = new Image();
+        this.allImg[K].src = src;
+        this.allImg[K].onload = () => {
           count++;
           this.clear();
-          progress.update((count / picAmount) * 300);
-          progress.render();
+          // progress.update((count / picAmount) * 300);
+          // progress.render();
           if (count == picAmount) {
             this.start();
           }
         };
-      })(this.Img[K]);
+      })(this.allImg[K]);
     }
-    this.bindEvent();
-  });
-
-  /* 清屏方法 */
-  Game.prototype.clear = function () {
-    this.draw.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  };
-
-  /* 启动游戏 */
-  Game.prototype.start = function () {
-    // this.draw.fillStyle = '#333';
-    // this.draw.textAlign = 'left';
-    this.bg = new Background();
-    this.land = new Land();
-    this.bird = new Bird();
-    this.bg.update();
-    this.bg.render();
-    this.pipeArr = [];
-    this.f = 0;
-    this.timer = setInterval(() => {
-      this.f++;
-      // 清屏
-      this.clear();
-      this.bg.update();
-      this.bg.render();
-      this.land.update();
-      this.land.render();
-      // 渲染管子
-      this.pipeArr.forEach((element) => {
-        element.update();
-        element.render();
-      });
-      // 每200帧渲染一个管子
-      this.frame % 200 === 0 && new Pipe();
-      this.bird.update();
-      this.bird.render();
-    }, 20);
   };
 
   /* 绑定事件 */

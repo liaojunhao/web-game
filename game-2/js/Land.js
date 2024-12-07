@@ -9,8 +9,8 @@
     this.x < -this.width ? (this.x = 0) : null;
   };
   Land.prototype.render = function () {
-    game.draw.drawImage(game.Img['land'], this.x, game.canvas.height - this.height);
-    game.draw.drawImage(game.Img['land'], this.x + this.width, game.canvas.height - this.height);
-    game.draw.drawImage(game.Img['land'], this.x + this.width * 2, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['land'], this.x, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['land'], this.x + this.width, game.canvas.height - this.height);
+    game.draw.drawImage(game.allImg['land'], this.x + this.width * 2, game.canvas.height - this.height);
   };
 })();
