@@ -52,7 +52,6 @@
     let picAmount = Object.keys(this.Img).length;
 
     /* 创建进度条 */
-    // x（320 / 2 - 150 = 10）y（568 / 3 = 189）w（进度条启始是 0 ）h（高度30）
     let progress = new Progress(this.draw, W / 2 - 150, H / 3, 0, 30);
     /* 遍历对象中所有图片 */
     for (let K in this.Img) {
@@ -85,14 +84,27 @@
 
     this.bg = new Background();
     this.land = new Land();
+    this.pipeArr = [];
+    this.f = 0;
     this.timer = setInterval(() => {
+      this.f++;
       // 清屏
       this.clear();
+      // 渲染背景
       this.bg.update();
       this.bg.render();
-
+      // 渲染平台
       this.land.update();
       this.land.render();
+      // 渲染管子
+      this.pipeArr.forEach((element) => {
+        element.update();
+        element.render();
+      });
+      // 每200帧渲染一个管子
+      if (this.f % 200 === 0) {
+        new Pipe();
+      }
     }, 20);
   };
 })();
