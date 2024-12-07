@@ -33,7 +33,7 @@
         const element = game.pipeArr[index];
         if (element === this) {
           game.pipeArr.splice(index, 1);
-          i--;
+          index--;
         }
       }
     }

@@ -69,6 +69,7 @@
         };
       })(this.Img[K]);
     }
+    this.bindEvent();
   });
 
   /* 清屏方法 */
@@ -78,22 +79,21 @@
 
   /* 启动游戏 */
   Game.prototype.start = function () {
-    this.frame = 0; // ?
-    this.draw.fillStyle = '#333';
-    this.draw.textAlign = 'left';
-
+    // this.draw.fillStyle = '#333';
+    // this.draw.textAlign = 'left';
     this.bg = new Background();
     this.land = new Land();
+    this.bird = new Bird();
+    this.bg.update();
+    this.bg.render();
     this.pipeArr = [];
     this.f = 0;
     this.timer = setInterval(() => {
       this.f++;
       // 清屏
       this.clear();
-      // 渲染背景
       this.bg.update();
       this.bg.render();
-      // 渲染平台
       this.land.update();
       this.land.render();
       // 渲染管子
@@ -102,9 +102,16 @@
         element.render();
       });
       // 每200帧渲染一个管子
-      if (this.f % 200 === 0) {
-        new Pipe();
-      }
+      this.frame % 200 === 0 && new Pipe();
+      this.bird.update();
+      this.bird.render();
     }, 20);
+  };
+
+  /* 绑定事件 */
+  Game.prototype.bindEvent = function () {
+    this.canvas.onclick = () => {
+      this.bird.fly();
+    };
   };
 })();
