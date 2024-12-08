@@ -13,15 +13,21 @@
   <body>
     <!-- 这里画布大小要写在标签内，用CSS去设置标签的大小只能改变元素本身的尺寸不能改变真实绘画区域，不设置宽高的canvas元素默认宽高是300*150 -->
     <canvas id="canvas"></canvas>
-    <script type="text/javascript" src="js/Progress.js"></script>
-    <script type="text/javascript" src="js/Game.js"></script>
-    <script type="text/javascript" src="js/Background.js"></script>
-    <script type="text/javascript" src="js/Land.js"></script>
-    <script type="text/javascript" src="js/Pipe.js"></script>
-    <script type="text/javascript" src="js/Bird.js"></script>
-    <script type="text/javascript" src="js/SceneManage.js"></script>
-    <script type="text/javascript">
-      let game = new Game();
-    </script>
+    <!-- 音乐 -->
+    <audio src="music/sfx_die.ogg" id="die"></audio>
+    <audio src="music/sfx_hit.ogg" id="hit"></audio>
+    <audio src="music/sfx_point.ogg" id="point"></audio>
+    <audio src="music/sfx_wing.ogg" id="wing"></audio>
   </body>
+  <script type="text/javascript" src="js/underscore-min.js"></script>
+  <script type="text/javascript" src="js/Progress.js"></script>
+  <script type="text/javascript" src="js/Game.js"></script>
+  <script type="text/javascript" src="js/Background.js"></script>
+  <script type="text/javascript" src="js/Land.js"></script>
+  <script type="text/javascript" src="js/Pipe.js"></script>
+  <script type="text/javascript" src="js/Bird.js"></script>
+  <script type="text/javascript" src="js/SceneManage.js"></script>
+  <script type="text/javascript">
+    let game = new Game();
+  </script>
 </html>

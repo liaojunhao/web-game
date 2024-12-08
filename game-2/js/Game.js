@@ -2,13 +2,17 @@
   let Game = (window.Game = function () {
     this.canvas = document.getElementById('canvas');
     this.draw = this.canvas.getContext('2d');
-    let W = document.documentElement.clientWidth,
-      H = document.documentElement.clientHeight;
+    let W = document.documentElement.clientWidth;
+    let H = document.documentElement.clientHeight;
     this.canvas.width = W > 420 ? 420 : W;
     this.canvas.height = H > 750 ? 750 : H;
     this.scene = 0; // 初始化场景的编号
+    //开辟本地存储
+    if (!localStorage.getItem('flappybird')) {
+      localStorage.setItem('flappybird', '[]');
+    }
+    // 加载图片
     this.loadImg();
-    // this.bindEvent();
   });
 
   /* 清屏方法 */
@@ -18,35 +22,21 @@
 
   /* 启动游戏 */
   Game.prototype.start = function () {
-    // this.draw.fillStyle = '#333';
-    // this.draw.textAlign = 'left';
-    // this.bg = new Background();
-    // this.land = new Land();
-    // this.bird = new Bird();
-    // this.bg.update();
-    // this.bg.render();
-    // this.pipeArr = [];
-    this.f = 0;
-    this.sM = new SceneManage();
-    // 默认进入的场景
-    this.sM.enter(0);
+    this.frame = 0;
+    this.draw.font = '14px consolas';
+    this.draw.textAlign = 'left';
+    this.sm = new SceneManage();
+    this.sm.enter(0);
+
     this.timer = setInterval(() => {
-      this.f++;
       this.clear();
-      this.sM.updateAndRender();
-      // this.bg.update();
-      // this.bg.render();
-      // this.land.update();
-      // this.land.render();
-      // // 渲染管子
-      // this.pipeArr.forEach((element) => {
-      //   element.update();
-      //   element.render();
-      // });
-      // // 每200帧渲染一个管子
-      // this.frame % 200 === 0 && new Pipe();
-      // this.bird.update();
-      // this.bird.render();
+      this.frame++;
+      this.sm.updateAndRender();
+      this.draw.fillStyle = '#333';
+      this.draw.textAlign = 'left';
+      game.draw.font = '16px consolas';
+      //显示场景编号
+      this.draw.fillText('场景号' + this.scene, 10, 40);
     }, 20);
   };
 
@@ -113,12 +103,5 @@
         };
       })(this.allImg[K]);
     }
-  };
-
-  /* 绑定事件 */
-  Game.prototype.bindEvent = function () {
-    this.canvas.onclick = () => {
-      this.bird.fly();
-    };
   };
 })();
